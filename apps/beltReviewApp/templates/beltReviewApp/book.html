@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Book Reviewer</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse ">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">Book Reviewer</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="active">
+                    <a href="/books">Home</a>
+                </li>
+                <li class="active">
+                        <a href="/add">Add Book and Review</a>
+                    </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown">Profile<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/users/{{request.session.id}}">Profile</a></li>
+                        <li><a href="/users/{{request.session.id}}/update">Update</a></li>
+                        <li><a href="/users/{{request.session.id}}/delete">Delete</a></li>
+                        <li><a href="/logout">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-1">
+            </div>
+            <div class="col-sm-6">
+                <h2>{{book.title}}</h2>
+
+                <h4>Reviews:</h4>
+                {% if ratings %}
+                    {% for rating in ratings %}
+                        <p><a href="/users/{{rating.rater.id}}">{{rating.rater.first_name}} {{rating.rater.last_name}}</a> says: {{rating.review}}</p>
+                        <p>Posted on {{rating.created_at}}</p>
+                    {% endfor %}
+                {% endif %}
+                {% if not ratings %}
+                    <p>No ratings yet</p>
+                {% endif %}
+            </div>
+            <div class="col-sm-4">
+                <h2>Add a review:</h2>
+                <form action="/books/{{book.id}}/review" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="review">Review:</label>
+                        <textarea class="form-control" id="review" placeholder="Enter review here" name="review"></textarea>
+                    </div>
+        
+                    <div class="form-group">
+                        <label for="rating">Rating: </label>
+                        <select class="form-control" id="rating" name="rating">
+                            <option value = None>Select Rating</option>
+                            <option value = 1>1</option>
+                            <option value = 2>2</option>
+                            <option value = 3>3</option>
+                            <option value = 4>4</option>
+                            <option value = 5>5</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                    <br>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
